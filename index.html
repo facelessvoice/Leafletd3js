@@ -24,34 +24,34 @@
  // Define the cities and their coordinates
  let cities = {
  "New York": {
-   "coordinates": [40.7128, -74.0060],
-   "data": {
-     "JavaScript": 10,
-     "Python": 9,
-     "Java": 8,
-     "C#": 7,
-     "C++": 6,
-     "PHP": 5,
-     "Ruby": 4,
-     "Swift": 3,
-     "Kotlin": 2,
-     "Go": 1
-   }
+  "coordinates": [40.7128, -74.0060],
+  "data": {
+    "JavaScript": 10,
+    "Python": 9,
+    "Java": 8,
+    "C#": 7,
+    "C++": 6,
+    "PHP": 5,
+    "Ruby": 4,
+    "Swift": 3,
+    "Kotlin": 2,
+    "Go": 1
+  }
  },
  "Los Angeles": {
-   "coordinates": [34.0522, -118.2437],
-   "data": {
-     "JavaScript": 9,
-     "Python": 8,
-     "Java": 7,
-     "C#": 6,
-     "C++": 5,
-     "PHP": 4,
-     "Ruby": 3,
-     "Swift": 2,
-     "Kotlin": 1,
-     "Go": 0
-   }
+  "coordinates": [34.0522, -118.2437],
+  "data": {
+    "JavaScript": 9,
+    "Python": 8,
+    "Java": 7,
+    "C#": 6,
+    "C++": 5,
+    "PHP": 4,
+    "Ruby": 3,
+    "Swift": 2,
+    "Kotlin": 1,
+    "Go": 0
+  }
  }
  // add more cities as needed
  };
@@ -62,7 +62,7 @@
  marker.cityName = cityName;
 
  // Fetch the city data when the marker is tapped
- marker.on('tap', fetchCityData);
+ marker.on('touchend', fetchCityData);
  }
 
  // Fetch the city data from the mock data
