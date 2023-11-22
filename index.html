@@ -1,86 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Leaflet + D3.js</title>
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
- <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
- <script src="https://d3js.org/d3.v5.min.js"></script>
- <style>
- #map {
- height: 100vh;
- }
- </style>
+  <title>Leaflet + D3.js</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script type="module" src="script.js"></script>
+  <style>
+    #map {
+      height: 100vh;
+    }
+  </style>
 </head>
 <body>
- <h1>test</h1>
- <div id="map"></div>
- <script>
- // Initialize the map with tap option set to false
- let map = L.map('map', { tap: false }).setView([40.7128, -74.0060], 13);
+  <h1>test</h1>
+  <div id="map"></div>
+  <script>
+    // Initialize the map with tap option set to false
+    let map = L.map('map', { tap: false }).setView([40.7128, -74.0060], 13);
 
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
- attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
- }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
- // Define the cities and their coordinates
- let cities = {
- "New York": {
- "coordinates": [40.7128, -74.0060],
- "data": {
-  "JavaScript": 10,
-  "Python": 9,
-  "Java": 8,
-  "C#": 7,
-  "C++": 6,
-  "PHP": 5,
-  "Ruby": 4,
-  "Swift": 3,
-  "Kotlin": 2,
-  "Go": 1
- }
- },
- "Los Angeles": {
- "coordinates": [34.0522, -118.2437],
- "data": {
-  "JavaScript": 9,
-  "Python": 8,
-  "Java": 7,
-  "C#": 6,
-  "C++": 5,
-  "PHP": 4,
-  "Ruby": 3,
-  "Swift": 2,
-  "Kotlin": 1,
-  "Go": 0
- }
- }
- // add more cities as needed
- };
+    // Define the cities and their coordinates
+    let cities = {
+      "New York": {
+        "coordinates": [40.7128, -74.0060],
+        "data": {
+          "JavaScript": 10,
+          "Python": 9,
+          "Java": 8,
+          "C#": 7,
+          "C++": 6,
+          "PHP": 5,
+          "Ruby": 4,
+          "Swift": 3,
+          "Kotlin": 2,
+          "Go": 1
+        }
+      },
+      "Los Angeles": {
+        "coordinates": [34.0522, -118.2437],
+        "data": {
+          "JavaScript": 9,
+          "Python": 8,
+          "Java": 7,
+          "C#": 6,
+          "C++": 5,
+          "PHP": 4,
+          "Ruby": 3,
+          "Swift": 2,
+          "Kotlin": 1,
+          "Go": 0
+        }
+      }
+      // add more cities as needed
+    };
 
- // Add markers for each city
- for (let cityName in cities) {
- let marker = L.marker(cities[cityName].coordinates).addTo(map);
- marker.cityName = cityName;
+    // Add markers for each city
+    for (let cityName in cities) {
+      let marker = L.marker(cities[cityName].coordinates).addTo(map);
+      marker.cityName = cityName;
 
- // Fetch the city data when the marker is clicked
- marker.on('click', fetchCityData);
- }
+      // Fetch the city data when the marker is clicked
+      marker.on('click', fetchCityData);
+    }
 
- // Fetch the city data from the mock data
- function fetchCityData(e) {
- let cityName = e.target.cityName;
- let data = cities[cityName].data;
- createChart(cityName, data);
- }
+    // Fetch the city data from the mock data
+    function fetchCityData(e) {
+      let cityName = e.target.cityName;
+      let data = cities[cityName].data;
+      createChart(cityName, data);
+      console.log('fetchCityData');
+    }
 
- // Create a chart with D3.js using the city data
- function createChart(cityName, data) {
- // create a chart with D3.js using the data
- // this is just a placeholder. replace with your actual D3.js code
- let chart = `<div id="chart">${JSON.stringify(data)}</div>`;
- let marker = L.marker(cities[cityName].coordinates);
- marker.bindPopup(chart).openPopup();
- }
- </script>
+// Create a chart with D3.js using the city data
+function createChart(cityName, data) {
+  // Create a div element to hold the D3.js chart
+  let chartDiv = document.createElement('div');
+  chartDiv.id = 'chart';
+
+  // Append the div to the body (or any other container element)
+  document.body.appendChild(chartDiv);
+
+  // Create a D3.js bar chart within the div
+  let svg = d3.select(`#${chartDiv.id}`)
+    .append('svg')
+    .attr('width', 200)
+    .attr('height', Object.keys(data).length * 40);
+
+  let barHeight = 30;
+  let barSpacing = 10;
+
+  // Create bars based on the data
+  svg.selectAll('rect')
+    .data(Object.entries(data))
+    .enter()
+    .append('rect')
+    .attr('x', 0)
+    .attr('y', (d, i) => i * (barHeight + barSpacing))
+    .attr('width', d => d[1] * 10)
+    .attr('height', barHeight)
+    .attr('fill', 'steelblue');
+
+  // Create labels for the bars
+  svg.selectAll('text')
+    .data(Object.entries(data))
+    .enter()
+    .append('text')
+    .text(d => `${d[0]}: ${d[1]}`)
+    .attr('x', d => d[1] * 10 + 5)
+    .attr('y', (d, i) => i * (barHeight + barSpacing) + barHeight / 2)
+    .attr('dy', '0.35em') // Adjust the vertical alignment
+
+  // Create a new marker for the popup
+  let popupMarker = L.marker(cities[cityName].coordinates);
+
+  // Bind the popup to the marker and open it
+  popupMarker.bindPopup(chartDiv.outerHTML).addTo(map).openPopup();
+}
+
+  </script>
 </body>
 </html>
